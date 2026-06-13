@@ -1,0 +1,44 @@
+{
+    "folders": [
+		{
+			"path": "."
+		},
+    ],
+    "settings": {
+        "editor.tabSize": 4,
+        "files.exclude": {
+            // 特定檔案類型
+            "*.sln": true,
+            "*.pdb": true,
+            "*.ncb": true,
+            "*.suo": true,
+            // 版本控制
+            "**/.git": true,
+            "**/.svn": true,
+            // 編輯器
+            "**/.vs": true,
+            // Unreal Engine
+            "**/Binaries": true,
+            "**/DerivedDataCache": true,
+            "**/Intermediate": true,
+            "**/Saved": true,
+        },
+        "search.exclude": {
+            // 特定檔案類型
+            "*.sln": true,
+            "*.pdb": true,
+            "*.ncb": true,
+            "*.suo": true,
+            // 版本控制
+            "**/.git": true,
+            "**/.svn": true,
+            // 編輯器
+            "**/.vs": true,
+            // Unreal Engine
+            "**/Binaries": true,
+            "**/DerivedDataCache": true,
+            "**/Intermediate": true,
+            "**/Saved": true,
+        },
+    }
+}
