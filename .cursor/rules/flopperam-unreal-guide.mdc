@@ -1,0 +1,49 @@
+---
+description: >
+  使用 Flopperam Unreal MCP 指南。當對話涉及 Flopperam MCP（flopperam-unreal）、
+  Content Browser 資產（/Game/... 路徑）、search_assets、bp_*、material_edit、
+  widget_edit 等 Unreal 編輯器資產操作時套用。
+alwaysApply: false
+---
+
+## 適用時機
+
+在以下情況套用本規則：
+
+- 呼叫或討論 **Flopperam Unreal MCP**（`flopperam-unreal`）工具
+- 處理 **Content Browser 資產**（`/Game/...` 路徑、`search_assets` 查詢結果）
+- 讀寫 Blueprint、Material、Widget、Animation 等 **uasset 類資產**（`bp_*`、`material_edit`、`*_inspect` 等）
+
+不涉及上述內容的一般對話（純 C++、專案設定、與資產無關的討論）時，勿套用。
+
+## 資產與路徑
+
+資產路徑使用 `PackageName.AssetName` 格式（例如 `/Game/Blueprints/BP_Enemy.BP_Enemy`）。一律使用 `search_assets` 回傳的**完整**路徑——切勿自行組裝或猜測路徑。猜測的 `/Game/...` 路徑會靜默解析為 nullptr。
+
+`scene_query` 回傳的是 Outliner 中的 Actor 標籤——這些**不是**資產路徑。`search_assets` 回傳的是 Content Browser 資產路徑——切勿混淆兩者。
+
+## 工作流程
+
+**先讀後寫**：在任何寫入工具之前，必須先呼叫至少一個讀取類工具（`bp_brief`、`bp_inspect`、`bp_export`、`search_assets`，或任何 `*_inspect`）。窄範圍的 bp_* 寫入都會延遲編譯——先批次處理多項操作，再對每個目標 Blueprint 各呼叫一次 `bp_commit`。
+
+**全部批次化**：每個接受陣列參數的工具（`queries`、`variables`、`components`、`nodes`、`edges`、`operations`）都設計為一次呼叫處理多個項目。迴圈重複呼叫是退步做法。
+
+**修改後驗證**：每次修改後，都要驗證結果確實生效——用 inspect 工具重新讀取，不要只因為「沒有錯誤」就宣稱工作已完成。
+
+## 錯誤復原
+
+**連線錯誤**：無法連到 Unreal Editor。請使用者確認編輯器與 FlopAI 外掛是否正在執行。
+
+**「Asset not found」**：使用 `search_assets` 再次確認路徑。路徑區分大小寫，且必須為 `PackageName.AssetName` 格式。
+
+**Blueprint 編譯錯誤**：使用 `bp_inspect` 查看目前狀態，再提交**精準**的後續修正（缺連線用 `bp_wire`、缺節點用 `bp_nodes`、缺宣告用 `bp_variable`/`bp_component`），然後再次呼叫 `bp_commit`。不要重新提交整份 spec——那會重複已成功套用的 intent。
+
+**部分套用 / missing_intents**：批次工具會回傳每個子操作的狀態。請閱讀 `sub_results`，只修補失敗的項目。
+
+**純節點「pin 'execute' not found」**：純函式（`variable_get`、數學運算、`K2_GetActorLocation`、`make_struct`、`break_struct`）沒有 exec 腳位。只連接資料腳位。
+
+**「Function 'X' not found」**：K2_ 前綴不一致——部分 AActor getter 有前綴（`K2_GetActorLocation`、`K2_SetActorLocation`、`K2_DestroyActor`），部分沒有（`GetActorForwardVector`、`GetOwner`、`GetWorld`）。使用 `bp_dry_run` 確認。
+
+**靜默 `NodesCreated=0` / UNVERIFIED**：請查看回應中的 `Errors[]` 陣列——真正的逐節點失敗原因在那裡，而非摘要中。
+
+**重試上限**：同一操作失敗 3 次後，停止並詢問使用者接下來要怎麼做。
