@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MouseLookAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ClimbAction;
+
 public:
 	AClimbingSystemCharacter();
 
@@ -59,4 +62,6 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void OnClimbActionStarted(const FInputActionValue& Value);
 };
