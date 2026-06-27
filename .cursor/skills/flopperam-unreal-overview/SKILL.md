@@ -1,13 +1,12 @@
 ---
-name: unreal-mcp-overview
+name: flopperam-unreal-overview
 description: >
-  Overview of the Flopperam Unreal Engine MCP server -- tool categories, 
-  workflows, and cross-tool relationships. Use when first connecting to 
-  a running Unreal Editor, when unsure which tool handles a task, or when 
-  the user asks about available capabilities.
+  Flopperam Unreal MCP（flopperam-unreal）伺服器概覽——工具分類、
+  工作流程與跨工具關係。首次連線 Unreal Editor、不確定該用哪個工具、
+  或使用者詢問可用功能時使用。
 ---
 
-# Flopperam Unreal Engine MCP — Overview
+# Flopperam Unreal MCP（flopperam-unreal）— Overview
 
 This MCP server controls a **live Unreal Editor** instance over WebSocket. Every tool operates on the running editor — if a tool returns a connection error, the editor may not be running or the FlopAI plugin is not loaded.
 
