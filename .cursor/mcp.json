@@ -3,7 +3,7 @@
       "flopperam-unreal": {
         "url": "https://agent.flopperam.com/mcp",
         "headers": {
-          "Authorization": "Bearer flopai_o2Uko8Gt0dJ2xh-_J9SKdQiFneSt8WcftRKQa55eA6E"
+          "Authorization": "Bearer ${env:FLOPAI_API_KEY}"
         }
       }
     }
