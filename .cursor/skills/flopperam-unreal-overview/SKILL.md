@@ -36,7 +36,8 @@ description: >
 ### Blueprint 唯讀 (Read-Only — All Tiers)
 
 - `bp_brief` — 單次呼叫的精簡 BP 概覽。初次了解時**優先使用**。
-- `bp_inspect` — 21 種目標查詢操作，可批次於單次呼叫
+- `bp_inspect` — 資產層級查詢（變數、函式、元件、class defaults 等），可批次於單次呼叫
+- `bp_graph_read` — graph 層級唯讀（節點、連線、pin、health_check、graph_summary 等），可批次於單次呼叫
 - `bp_export` — 完整 GraphSpec JSON 匯出，供複製或比對
 
 ### Blueprint 編寫 (Authoring — Paid Tier)
@@ -82,6 +83,7 @@ description: >
 ### AI 與能力系統 (AI & Ability System)
 
 - `behavior_tree` — BT、Blackboard、AI Controller、perception、NavMesh、EQS、Smart Object
+- `state_tree_edit` — UStateTree 編寫（state、task、condition、transition）；需先以 `behavior_tree` 建立資產，且專案須啟用 StateTree 外掛
 - `gas_edit` — Gameplay Ability、Effect、Attribute Set
 - `tag_registry_edit` — 專案級 Gameplay Tag 階層
 
@@ -132,7 +134,7 @@ description: >
 
 ## 核心工作流程 (Core Workflow)
 
-1. **定向** — `bp_brief`、`scene_brief`、`search_assets` 或 `project_context`
+1. **定向** — `bp_brief`、`bp_graph_read`、`scene_brief`、`search_assets` 或 `project_context`
 2. **執行** — 使用對應領域的工具
 3. **驗證** — 以 inspect 工具重新讀取；執行期行為則跑 PIE 測試
 
@@ -140,7 +142,7 @@ description: >
 
 - **全部批次化** — 每個接受陣列參數的工具（`queries`、`variables`、`components`、`nodes`、`edges`、`operations`）都設計為一次呼叫處理多個項目
 - **獨立工具平行呼叫** — 若兩者都需要，不必等 `scene_query` 完成再呼叫 `search_assets`
-- **使用篩選** — `bp_inspect`、`material_inspect`、`widget_inspect`、`animation_inspect` 皆支援 compact 模式與篩選
+- **使用篩選** — `bp_inspect`、`bp_graph_read`、`material_inspect`、`widget_inspect`、`animation_inspect` 皆支援 compact 模式與篩選
 - **延遲編譯** — 窄範圍 bp_* 寫入會延遲編譯；先批次處理多項，再呼叫一次 `bp_commit`
 
 ## 限制 (Constraints)
